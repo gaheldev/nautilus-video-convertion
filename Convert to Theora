@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# A script for Nautilus to convert a video file to Theora with highest quality
+#
+
+# Counter for how many files were created
+files_created=0
+
+# Remember if the user wants to override all existing output files
+override_all=false
+
+# video-convert old_file new_file
+video-convert() {
+	ffmpeg -y -i "$1" -q:v 10 -q:a 6 -g:v 64 "$2"
+}
+
+# Convert each selected file to theora
+for uri in "$@"; do
+	# Append current path to uri
+	uri="$PWD/$uri"
+
+	# Make sure it's a file
+	# TODO: check it's a video
+	if [ ! -f "$uri" ]; then
+		continue
+	fi
+
+	# Get the filename
+	filename=$(basename "$uri")
+	name="${filename%.*}"
+	new_name="${name}.ogv"
+
+	if [ ! override_all ]; then
+		if [ -f "$new_name" ]; then
+			result=$(zenity --question \
+				--title="File Exists" \
+				--text="The file "$new_name" already exists.\n\nDo you want to override it?" \
+				--ok-label="Yes" \
+				--cancel-label="No" \
+				--extra-button="Override all" \
+				2>&1)
+
+			# Check the exit code and button clicked
+			exit_code=$?
+
+			if [ $exit_code -eq 1 ]; then
+				# Do not override the file
+				continue
+			elif [ "$result" == "Apply to All" ]; then
+				override_all=true
+			fi
+		fi
+	fi
+
+	video-convert "$filename" "$new_name"
+
+	# Get the file custom icon if it exists
+	# custom_icon=$(gio info "$uri" | grep "metadata::custom-icon" | sed "s/.*file:\/\///g")
+
+	# Increment the counter
+	files_created=$((files_created+1))
+done
+
