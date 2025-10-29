@@ -11,7 +11,7 @@ Right on a video or a list of videos, go to "Scripts" and select the convertion.
 > Use hard symlink as nautilus doesn't seem to work with symbolic link
 
 ```
-cd nautilus-desktop-file
+cd nautilus-video-convertion
 ln Convert\ to\ Theora ~/.local/share/nautilus/scripts/Convert\ to\ Theora
 ```
 
