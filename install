@@ -1,0 +1,4 @@
+#!/bin/bash
+
+ln Shrink\ Video\ Size ~/.local/share/nautilus/scripts/Shrink\ Video\ Size
+ln Convert\ to\ Theora ~/.local/share/nautilus/scripts/Convert\ to\ Theora
